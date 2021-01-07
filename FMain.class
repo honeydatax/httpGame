@@ -1,0 +1,78 @@
+' Gambas class file
+
+Public Function curls(ArgsCount As Integer, Args1 As String, Args2 As String) As String
+  Dim s As Socket
+  Dim ii As Integer
+  Dim i As Integer
+  Dim ss As String
+  Dim sss As String
+  Dim ssss As String
+  s = New Socket
+  sss = ""
+  i = 80
+  ss = "localhost"
+  If ArgsCount > 1 Then ss = Args1
+  If ArgsCount > 2 Then 
+    sss = Args2
+    i = Val(sss)
+  Endif
+  ss = Replace(ss, "http:", "")
+  ss = Replace(ss, "//", "")
+  ssss = ""
+  ii = InStr(ss, "/")
+  If ii > 0 Then
+    ssss = Mid(ss, ii + 1)
+    ss = Mid(ss, 1, ii - 1)
+  Endif
+  ss = Replace(ss, "/", "")
+  s.Connect(ss, i)
+  Do While (s.Status <> 7) And (s.Status > 0)
+    Wait 0.1
+  Loop
+  sss = "GET /" & ssss & " HTTP/1.0\n\n"   
+  If s.Status <> 7 Then Return "error"
+  Write #s, sss, Len(sss)
+  Do While Lof(s) = 0
+    Wait 0.1
+  Loop
+  Read #s, sss, Lof(s)
+  ii = InStr(sss, gb.CrLf & gb.Crlf)
+  If ii > 0 Then
+    sss = Mid(sss, ii + 4)
+  Endif
+  
+  Return sss
+  End
+
+Public Sub _new()
+
+End
+
+Public Sub Form_Open()
+
+End
+
+Public Sub Button1_Click()
+Dim v As String
+Dim vv As String
+Dim i As Integer
+Dim ii As Integer
+vv = ""
+v = Replace(TextBox1.text, "http:", "")
+v = Replace(v, "HTTP:", "")
+v = Replace(v, "//", "")
+i = InStr(v, ":")
+ii = 2
+vv = "80"
+If i > 0 Then 
+  ii = 3
+  vv = Mid(v, i + 1)
+  v = Mid(v, 1, i - 1)
+  
+Endif
+
+TextArea1.Text = curls(ii, v, vv)
+End Sub
+
+Public Sub Timer1_Timer()
+End
