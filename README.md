@@ -1,2 +1,3 @@
 # XtxtBrowser
-Xtxt browser a model for gambas txt browsers
+http loto game a server game of loto do curl ip:8080
+
